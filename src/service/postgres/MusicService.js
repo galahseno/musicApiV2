@@ -24,14 +24,14 @@ class SongService {
     const result = await this._pool.query(query);
 
     if (!result.rows[0].id) {
-      throw new InvariantError('Song Gaga ditambahkan');
+      throw new InvariantError('Song Gagal ditambahkan');
     }
 
     return result.rows[0].id;
   }
 
   async getSongs() {
-    const result = await this._pool.query('SELECT * FROM apimusicv1');
+    const result = await this._pool.query('SELECT id, title, performer FROM apimusicv1');
     return result.rows.map(mapDBToModel);
   }
 
