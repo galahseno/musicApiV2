@@ -99,7 +99,7 @@ class SongsHandler {
 
       return {
         status: 'success',
-        message: 'lagu berhasil diperbarui',
+        message: 'Lagu berhasil diperbarui',
       };
     } catch (error) {
       if (error instanceof ClientError) {
@@ -127,7 +127,7 @@ class SongsHandler {
 
       return {
         status: 'success',
-        message: 'lagu berhasil dihapus',
+        message: 'Lagu berhasil dihapus',
       };
     } catch (error) {
       if (error instanceof ClientError) {
