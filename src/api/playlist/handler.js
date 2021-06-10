@@ -1,9 +1,8 @@
 const { validateError } = require('../../utils/index');
 
 class PlaylistsHandler {
-  constructor(playlistService, userService, validator) {
-    this._playlistService = playlistService;
-    this._userService = userService;
+  constructor(service, validator) {
+    this._service = service;
     this._validator = validator;
 
     this.postPlaylistHandler = this.postPlaylistHandler.bind(this);
@@ -18,7 +17,7 @@ class PlaylistsHandler {
       const { name } = request.payload;
       const { id: owner } = request.auth.credentials;
 
-      const playlistId = await this._playlistService.addPlaylists({ name, owner });
+      const playlistId = await this._service.addPlaylists({ name, owner });
 
       const response = h.response({
         status: 'success',
@@ -39,7 +38,7 @@ class PlaylistsHandler {
   async getPlaylistsHandler(request, h) {
     try {
       const { id } = request.auth.credentials;
-      const playlists = await this._playlistService.getPlaylists(id);
+      const playlists = await this._service.getPlaylists(id);
 
       const response = {
         status: 'success',
@@ -59,7 +58,7 @@ class PlaylistsHandler {
     try {
       const { playlistId } = request.params;
       const { id: owner } = request.auth.credentials;
-      await this._playlistService.deletePlaylistsById(playlistId, owner);
+      await this._service.deletePlaylistsById(playlistId, owner);
 
       return {
         status: 'success',
