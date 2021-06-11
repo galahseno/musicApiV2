@@ -2,18 +2,19 @@ const { Pool } = require('pg');
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
-const AuthorizationError = require('../../exceptions/AuthorizationError');
 
 class PlaylistSongService {
-  constructor(collaborationsService) {
+  constructor(musicService, playlistService, collaborationsService) {
     this._pool = new Pool();
+    this._musicService = musicService;
+    this._playlistService = playlistService;
     this._collaborationService = collaborationsService;
   }
 
   async addSongToPlaylist({ playlistId, songId, owner }) {
     const id = `playlistSong-${nanoid(16)}`;
     await this.verifyPlaylistSongAccess(playlistId, owner);
-    await this.verifySongId(songId);
+    await this._musicService.verifySongId(songId);
 
     const query = {
       text: 'INSERT INTO playlistsongs VALUES($1, $2, $3) RETURNING id',
@@ -42,7 +43,7 @@ class PlaylistSongService {
   }
 
   async deleteSongInPlaylistById(playlistId, songId, owner) {
-    await this.verifySongId(songId);
+    await this._musicService.verifySongId(songId);
     await this.verifyPlaylistSongAccess(playlistId, owner);
     const query = {
       text: 'DELETE FROM playlistsongs WHERE playlist_id = $1 RETURNING id',
@@ -56,36 +57,9 @@ class PlaylistSongService {
     }
   }
 
-  async verifySongId(songId) {
-    const query = {
-      text: 'SELECT * FROM apimusicv2 WHERE id = $1',
-      values: [songId],
-    };
-    const result = await this._pool.query(query);
-
-    if (!result.rows.length) {
-      throw new NotFoundError('songId tidak ditemukan');
-    }
-  }
-
-  async verifyPlaylistsOwner(playlistId, owner) {
-    const query = {
-      text: 'SELECT * FROM playlists WHERE id = $1',
-      values: [playlistId],
-    };
-    const result = await this._pool.query(query);
-    if (!result.rows.length) {
-      throw new NotFoundError('Playlist tidak ditemukan');
-    }
-    const playlist = result.rows[0];
-    if (playlist.owner !== owner) {
-      throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
-    }
-  }
-
   async verifyPlaylistSongAccess(playlistId, userId) {
     try {
-      await this.verifyPlaylistsOwner(playlistId, userId);
+      await this._playlistService.verifyPlaylistsOwner(playlistId, userId);
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw error;

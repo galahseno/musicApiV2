@@ -1,9 +1,9 @@
 const { validateError } = require('../../utils/index');
 
 class CollaborationsHandler {
-  constructor(collaborationsService, playlistSongService, validator) {
+  constructor(collaborationsService, playlistService, validator) {
     this._collaborationsService = collaborationsService;
-    this._playlistSongService = playlistSongService;
+    this._playlistService = playlistService;
     this._validator = validator;
 
     this.postCollaborationHandler = this.postCollaborationHandler.bind(this);
@@ -17,7 +17,7 @@ class CollaborationsHandler {
       const { id: owner } = request.auth.credentials;
       const { playlistId, userId } = request.payload;
 
-      await this._playlistSongService.verifyPlaylistsOwner(playlistId, owner);
+      await this._playlistService.verifyPlaylistsOwner(playlistId, owner);
 
       const collaborationId = await
       this._collaborationsService.addCollaboration(playlistId, userId);
@@ -44,7 +44,7 @@ class CollaborationsHandler {
       const { id: owner } = request.auth.credentials;
       const { playlistId, userId } = request.payload;
 
-      await this._playlistSongService.verifyPlaylistsOwner(playlistId, owner);
+      await this._playlistService.verifyPlaylistsOwner(playlistId, owner);
       await this._collaborationsService.deleteCollaboration(playlistId, userId);
 
       return {
