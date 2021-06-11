@@ -27,15 +27,27 @@ class PlaylistsService {
   }
 
   async getPlaylists(id) {
+    let resultPlaylist;
     const query = {
       text: `SELECT playlists.id, playlists.name, users.username
       FROM playlists
-      LEFT JOIN users ON users.id = playlists.owner
+      LEFT JOIN users ON playlists.owner = users.id
       WHERE playlists.owner = $1`,
       values: [id],
     };
-    const result = await this._pool.query(query);
-    return result.rows;
+    resultPlaylist = await this._pool.query(query);
+    if (!resultPlaylist.rows.length) {
+      const queryColab = {
+        text: `SELECT playlists.id, playlists.name, users.username
+        FROM playlists
+        INNER JOIN users ON playlists.owner = users.id
+        INNER JOIN collaborations ON collaborations.playlist_id = playlists.id
+        WHERE collaborations.user_id = $1`,
+        values: [id],
+      };
+      resultPlaylist = await this._pool.query(queryColab);
+    }
+    return resultPlaylist.rows;
   }
 
   async deletePlaylistsById(id, owner) {

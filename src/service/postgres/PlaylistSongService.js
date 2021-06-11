@@ -5,13 +5,14 @@ const NotFoundError = require('../../exceptions/NotFoundError');
 const AuthorizationError = require('../../exceptions/AuthorizationError');
 
 class PlaylistSongService {
-  constructor() {
+  constructor(collaborationsService) {
     this._pool = new Pool();
+    this._collaborationService = collaborationsService;
   }
 
   async addSongToPlaylist({ playlistId, songId, owner }) {
     const id = `playlistSong-${nanoid(16)}`;
-    await this.verifyPlaylistsOwner(playlistId, owner);
+    await this.verifyPlaylistSongAccess(playlistId, owner);
     await this.verifySongId(songId);
 
     const query = {
@@ -26,7 +27,7 @@ class PlaylistSongService {
   }
 
   async getSongInPlaylists(playlistId, owner) {
-    await this.verifyPlaylistsOwner(playlistId, owner);
+    await this.verifyPlaylistSongAccess(playlistId, owner);
 
     const query = {
       text: `SELECT apimusicv2.id, apimusicv2.title, apimusicv2.performer
@@ -42,7 +43,7 @@ class PlaylistSongService {
 
   async deleteSongInPlaylistById(playlistId, songId, owner) {
     await this.verifySongId(songId);
-    await this.verifyPlaylistsOwner(playlistId, owner);
+    await this.verifyPlaylistSongAccess(playlistId, owner);
     const query = {
       text: 'DELETE FROM playlistsongs WHERE playlist_id = $1 RETURNING id',
       values: [playlistId],
@@ -79,6 +80,21 @@ class PlaylistSongService {
     const playlist = result.rows[0];
     if (playlist.owner !== owner) {
       throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
+    }
+  }
+
+  async verifyPlaylistSongAccess(playlistId, userId) {
+    try {
+      await this.verifyPlaylistsOwner(playlistId, userId);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
+      try {
+        await this._collaborationService.verifyCollaborator(playlistId, userId);
+      } catch {
+        throw error;
+      }
     }
   }
 }
