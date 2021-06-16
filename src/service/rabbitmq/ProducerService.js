@@ -5,8 +5,8 @@ class ProducerService {
     this._playlistSongService = playlistSongService;
   }
 
-  async sendMessage(queue, message, playlistId) {
-    await this._playlistSongService.verifyPlaylistSongAccess(playlistId, message.userId);
+  async sendMessage(queue, message) {
+    await this._playlistSongService.verifyPlaylistSongAccess(message.playlistId, message.userId);
 
     const messageString = JSON.stringify(message);
     const connection = await amqp.connect(process.env.RABBITMQ_SERVER);

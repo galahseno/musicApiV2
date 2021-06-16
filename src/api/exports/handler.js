@@ -15,10 +15,10 @@ class ExportsHandler {
       const message = {
         userId: request.auth.credentials.id,
         targetEmail: request.payload.targetEmail,
+        playlistId: request.params.playlistId,
       };
-      const { playlistId } = request.params;
 
-      await this._service.sendMessage('export:playlist', message, playlistId);
+      await this._service.sendMessage('export:playlist', message);
       const response = h.response({
         status: 'success',
         message: 'Permintaan Anda sedang kami proses',
