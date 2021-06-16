@@ -27,7 +27,6 @@ class PlaylistsSongHandler {
       response.code(201);
       return response;
     } catch (error) {
-      console.log(error);
       return validateError(error, h);
     }
   }
