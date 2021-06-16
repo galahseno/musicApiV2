@@ -33,9 +33,7 @@ class SongsHandler {
       response.code(201);
       return response;
     } catch (error) {
-      const response = validateError(error, h);
-
-      return response;
+      return validateError(error, h);
     }
   }
 
@@ -51,9 +49,7 @@ class SongsHandler {
       };
       return response;
     } catch (error) {
-      const response = validateError(error, h);
-
-      return response;
+      return validateError(error, h);
     }
   }
 
@@ -68,9 +64,7 @@ class SongsHandler {
         },
       };
     } catch (error) {
-      const response = validateError(error, h);
-
-      return response;
+      return validateError(error, h);
     }
   }
 
@@ -86,9 +80,7 @@ class SongsHandler {
         message: 'Lagu berhasil diperbarui',
       };
     } catch (error) {
-      const response = validateError(error, h);
-
-      return response;
+      return validateError(error, h);
     }
   }
 
@@ -102,9 +94,7 @@ class SongsHandler {
         message: 'Lagu berhasil dihapus',
       };
     } catch (error) {
-      const response = validateError(error, h);
-
-      return response;
+      return validateError(error, h);
     }
   }
 }

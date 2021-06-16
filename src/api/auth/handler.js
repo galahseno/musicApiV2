@@ -35,9 +35,7 @@ class AuthenticationsHandler {
       response.code(201);
       return response;
     } catch (error) {
-      const response = validateError(error, h);
-
-      return response;
+      return validateError(error, h);
     }
   }
 
@@ -58,9 +56,7 @@ class AuthenticationsHandler {
         },
       };
     } catch (error) {
-      const response = validateError(error, h);
-
-      return response;
+      return validateError(error, h);
     }
   }
 
@@ -77,9 +73,7 @@ class AuthenticationsHandler {
         message: 'Refresh token berhasil dihapus',
       };
     } catch (error) {
-      const response = validateError(error, h);
-
-      return response;
+      return validateError(error, h);
     }
   }
 }

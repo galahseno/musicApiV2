@@ -32,9 +32,7 @@ class CollaborationsHandler {
       response.code(201);
       return response;
     } catch (error) {
-      const response = validateError(error, h);
-
-      return response;
+      return validateError(error, h);
     }
   }
 
@@ -52,9 +50,7 @@ class CollaborationsHandler {
         message: 'Kolaborasi berhasil dihapus',
       };
     } catch (error) {
-      const response = validateError(error, h);
-
-      return response;
+      return validateError(error, h);
     }
   }
 }

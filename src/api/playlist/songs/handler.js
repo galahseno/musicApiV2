@@ -27,9 +27,7 @@ class PlaylistsSongHandler {
       response.code(201);
       return response;
     } catch (error) {
-      const response = validateError(error, h);
-
-      return response;
+      return validateError(error, h);
     }
   }
 
@@ -47,9 +45,7 @@ class PlaylistsSongHandler {
       };
       return response;
     } catch (error) {
-      const response = validateError(error, h);
-
-      return response;
+      return validateError(error, h);
     }
   }
 
@@ -67,9 +63,7 @@ class PlaylistsSongHandler {
         message: 'Lagu berhasil dihapus dari playlist',
       };
     } catch (error) {
-      const response = validateError(error, h);
-
-      return response;
+      return validateError(error, h);
     }
   }
 }

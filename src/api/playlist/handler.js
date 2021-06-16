@@ -29,9 +29,7 @@ class PlaylistsHandler {
       response.code(201);
       return response;
     } catch (error) {
-      const response = validateError(error, h);
-
-      return response;
+      return validateError(error, h);
     }
   }
 
@@ -48,9 +46,7 @@ class PlaylistsHandler {
       };
       return response;
     } catch (error) {
-      const response = validateError(error, h);
-
-      return response;
+      return validateError(error, h);
     }
   }
 
@@ -65,9 +61,7 @@ class PlaylistsHandler {
         message: 'Playlist berhasil dihapus',
       };
     } catch (error) {
-      const response = validateError(error, h);
-
-      return response;
+      return validateError(error, h);
     }
   }
 }
